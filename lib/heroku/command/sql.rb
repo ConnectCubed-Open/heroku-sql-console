@@ -13,7 +13,7 @@ class Heroku::Command::Sql < Heroku::Command::BaseWithApp
     display "SQL console for #{app}.#{heroku.host}"
     while sql = Readline.readline('SQL> ')
       unless sql.nil? || sql.strip.empty?
-        string += sql
+        string += ' ' + sql
         break if sql.downcase.strip == 'exit'
         if(sql.match(/;/))
           sqlconsole_history_add(app, sql)
