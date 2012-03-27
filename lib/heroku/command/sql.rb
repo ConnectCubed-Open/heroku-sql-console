@@ -7,15 +7,19 @@ class Heroku::Command::Sql < Heroku::Command::BaseWithApp
   #
   def index
     database_url = heroku.config_vars(app)['DATABASE_URL']
-
+    string = ''
     sqlconsole_history_read(app)
 
     display "SQL console for #{app}.#{heroku.host}"
     while sql = Readline.readline('SQL> ')
       unless sql.nil? || sql.strip.empty?
-        sqlconsole_history_add(app, sql)
+        string += sql
         break if sql.downcase.strip == 'exit'
-        display execute_sql(database_url, sql)
+        if(sql.match(/;/))
+          sqlconsole_history_add(app, sql)
+          display execute_sql(database_url, string)
+          string = ''
+        end
       end
     end
   end
