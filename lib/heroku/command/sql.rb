@@ -15,6 +15,7 @@ class Heroku::Command::Sql < Heroku::Command::BaseWithApp
       unless sql.nil? || sql.strip.empty?
         string += ' ' + sql
         break if sql.downcase.strip == 'exit'
+        sql.replace('\t', ' ')
         if(sql.match(/;/))
           sqlconsole_history_add(app, sql)
           display execute_sql(database_url, string)
